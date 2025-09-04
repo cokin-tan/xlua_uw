@@ -28,13 +28,13 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           path: ./build/plugin_lua54/**/*
-          name: plugin_lua54
+          name: android_plugin_lua54
           overwrite: true  # v4新增的覆盖选项
       - name: Upload53
         uses: actions/upload-artifact@v4
         with:
           path: ./build/plugin_lua53/**/*
-          name: plugin_lua53 
+          name: android_plugin_lua53 
           overwrite: true  # v4新增的覆盖选项
 
   android_luajit:
@@ -58,7 +58,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           path: ./build/plugin_luajit/**/*
-          name: plugin_luajit
+          name: android_plugin_luajit
           overwrite: true  # v4新增的覆盖选项
   
   ohos:
@@ -83,13 +83,13 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           path: ./build/plugin_lua54/**/*
-          name: plugin_lua54
+          name: ohos_plugin_lua54
           overwrite: true  # v4新增的覆盖选项
       - name: Upload53
         uses: actions/upload-artifact@v4
         with:
           path: ./build/plugin_lua53/**/*
-          name: plugin_lua53
+          name: ohos_plugin_lua53
           overwrite: true  # v4新增的覆盖选项
 
   linux:
@@ -113,13 +113,13 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           path: ./build/plugin_lua53/**/*
-          name: plugin_lua53   
+          name: linux_plugin_lua53   
           overwrite: true  # v4新增的覆盖选项
       - name: UploadJit
         uses: actions/upload-artifact@v4
         with:
           path: ./build/plugin_luajit/**/*
-          name: plugin_luajit  
+          name: linux_plugin_luajit  
           overwrite: true  # v4新增的覆盖选项
   ios:
     runs-on: macos-latest
@@ -137,19 +137,19 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           path: ./build/plugin_lua54/**/*
-          name: plugin_lua54
+          name: ios_plugin_lua54
           overwrite: true  # v4新增的覆盖选项
       - name: Upload53
         uses: actions/upload-artifact@v4
         with:
           path: ./build/plugin_lua53/**/*
-          name: plugin_lua53   
+          name: ios_plugin_lua53   
           overwrite: true  # v4新增的覆盖选项
       - name: UploadJit
         uses: actions/upload-artifact@v4
         with:
           path: ./build/plugin_luajit/**/*
-          name: plugin_luajit
+          name: ios_plugin_luajit
           overwrite: true  # v4新增的覆盖选项
   osx:
     runs-on: macos-latest
@@ -169,19 +169,19 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           path: ./build/plugin_lua54/**/*
-          name: plugin_lua54
+          name: osx_plugin_lua54
           overwrite: true  # v4新增的覆盖选项
       - name: Upload53
         uses: actions/upload-artifact@v4
         with:
           path: ./build/plugin_lua53/**/*
-          name: plugin_lua53   
+          name: osx_plugin_lua53   
           overwrite: true  # v4新增的覆盖选项
       - name: UploadJit
         uses: actions/upload-artifact@v4
         with:
           path: ./build/plugin_luajit/**/*
-          name: plugin_luajit  
+          name: osx_plugin_luajit  
           overwrite: true  # v4新增的覆盖选项
   windows:
     runs-on: windows-2022
@@ -209,19 +209,19 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           path: ./build/plugin_lua54/**/*
-          name: plugin_lua54
+          name: win_plugin_lua54
           overwrite: true  # v4新增的覆盖选项
       - name: Upload53
         uses: actions/upload-artifact@v4
         with:
           path: ./build/plugin_lua53/**/*
-          name: plugin_lua53   
+          name: win_plugin_lua53   
           overwrite: true  # v4新增的覆盖选项
       - name: UploadJit
         uses: actions/upload-artifact@v4
         with:
           path: ./build/plugin_luajit/**/*
-          name: plugin_luajit
+          name: win_plugin_luajit
           overwrite: true  # v4新增的覆盖选项
           
   windows-luajit-32:
@@ -244,7 +244,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           path: ./build/plugin_luajit/**/*
-          name: plugin_luajit
+          name: win_plugin_luajit
           overwrite: true  # v4新增的覆盖选项
     
 
