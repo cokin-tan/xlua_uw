@@ -139,7 +139,7 @@ jobs:
       - name: Build
         run: |
           cd build
-          chmod +x make_ios_.sh
+          chmod +x make_ios_*.sh
           ./make_ios_lua54.sh
           ./make_ios_lua53.sh
           ./make_ios_luajit.sh
