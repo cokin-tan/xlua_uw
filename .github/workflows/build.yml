@@ -21,6 +21,7 @@ jobs:
       - name: Build
         run: |
           cd build
+          chmod +x make_android_lua5*.sh
           ./make_android_lua54.sh
           ./make_android_lua53.sh
       - name: Upload
@@ -49,6 +50,7 @@ jobs:
         run: |
           cd build
           sudo apt install gcc-multilib libncurses5 -y
+          chmod +x make_android_luajit_arm64.sh
           ./make_android_luajit_arm64.sh  
       - name: UploadJit
         uses: actions/upload-artifact@v4
@@ -92,6 +94,7 @@ jobs:
       - name: Build
         run: |
           cd build
+          chmod +x make_linux*.sh
           ./make_linux_lua54.sh
           ./make_linux64_lua53.sh
           ./make_linux64_luajit.sh
@@ -118,6 +121,7 @@ jobs:
       - name: Build
         run: |
           cd build
+          chmod +x make_ios_lua5*.sh
           ./make_ios_lua54.sh
           ./make_ios_lua53.sh
           ./make_ios_luajit.sh
@@ -144,6 +148,7 @@ jobs:
       - name: Build
         run: |
           cd build
+          chmod +x make_osx*.sh
           ./make_osx_lua54.sh
           ./make_osx_lua53.sh
           ./make_osx_luajit.sh
