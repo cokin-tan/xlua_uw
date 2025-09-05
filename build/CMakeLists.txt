@@ -15,6 +15,35 @@ endif ()
 
 project(XLua)
 
+# Android 16KB页面对齐支持 - 满足Google Play 2025年要求
+if (ANDROID)
+    # 设置16KB页面对齐（16384 = 16KB）
+    set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,-z,max-page-size=16384")
+    set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} -Wl,-z,max-page-size=16384")
+    
+    # 添加Android安全和优化标志
+    set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,-z,noexecstack")
+    set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,-z,relro")
+    set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,-z,now")
+    
+    # 函数和数据段分离优化
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ffunction-sections -fdata-sections")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -ffunction-sections -fdata-sections")
+    set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,--gc-sections")
+    
+    # 输出配置信息
+    message(STATUS "Android构建配置已启用:")
+    message(STATUS "  - 16KB页面对齐: 已启用")
+    message(STATUS "  - 安全标志: 已启用")
+    message(STATUS "  - 代码段优化: 已启用")
+    if(ANDROID_ABI)
+        message(STATUS "  - 目标ABI: ${ANDROID_ABI}")
+    endif()
+    if(ANDROID_PLATFORM)
+        message(STATUS "  - 目标平台: ${ANDROID_PLATFORM}")
+    endif()
+endif()
+
 if ( IOS )
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fembed-bitcode")
         set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fembed-bitcode")
@@ -216,6 +245,36 @@ elseif ("${CMAKE_SYSTEM_NAME}" STREQUAL "Switch")
         ${THIRDPART_SRC}
     )
     target_compile_options(xlua PRIVATE -m64 -mcpu=cortex-a57+fp+simd+crypto+crc -fno-common -fno-short-enums -ffunction-sections -fdata-sections -fPIC -fms-extensions)
+elseif (ANDROID)
+    # Android平台特定配置
+    add_library(xlua SHARED
+        ${LUA_CORE}
+        ${LUA_LIB}
+        ${LUA_SOCKET}
+        ${XLUA_CORE}
+        ${THIRDPART_SRC}
+    )
+    
+    # Android特定的编译选项
+    target_compile_options(xlua PRIVATE 
+        -fPIC
+        -ffunction-sections 
+        -fdata-sections
+        -fvisibility=hidden
+    )
+    
+    # 确保16KB对齐设置应用到目标
+    if(CMAKE_VERSION VERSION_GREATER_EQUAL "3.13")
+        target_link_options(xlua PRIVATE 
+            "LINKER:-z,max-page-size=16384"
+            "LINKER:-z,noexecstack"
+            "LINKER:-z,relro"
+            "LINKER:-z,now"
+            "LINKER:--gc-sections"
+        )
+    endif()
+    
+    message(STATUS "xlua Android库配置完成，已启用16KB页面对齐")
 else ( )
     add_library(xlua SHARED
         ${LUA_CORE}
