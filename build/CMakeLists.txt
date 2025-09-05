@@ -40,6 +40,33 @@ endif()
 set(LUA_SRC_PATH lua-${LUA_VERSION}/src)
 set(LUAJIT_SRC_PATH luajit-2.1.0b3/src)
 
+#begin add by cokin.tan
+
+#begin lua-protobuf
+set (PROTOBUF_SRC lua-protobuf/pb.c)
+set_property(
+     SOURCE ${PROTOBUF_SRC}
+     APPEND
+     PROPERTY COMPILE_DEFINITIONS
+     LUA_LIB
+ )
+ set (THIRDPART_SRC ${THIRDPART_SRC} ${PROTOBUF_SRC})
+ #end lua-protobuf
+
+#begin lua-rapidjson
+set (RAPIDJSON_SRC lua-rapidjson/source/rapidjson.cpp)
+set_property(
+	SOURCE ${RAPIDJSON_SRC}
+	APPEND
+	PROPERTY COMPILE_DEFINITIONS
+	LUA_LIB
+)
+list(APPEND THIRDPART_INC  lua-rapidjson/include)
+set (THIRDPART_SRC ${THIRDPART_SRC} ${RAPIDJSON_SRC})
+#end lua-rapidjson
+
+ #end add by cokin.tan
+
 if (USING_LUAJIT)
 	
     if (APPLE AND NOT IOS AND NOT ANDROID)
