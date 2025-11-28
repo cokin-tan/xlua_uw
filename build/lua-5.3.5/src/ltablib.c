@@ -1,5 +1,5 @@
 /*
-** $Id: ltablib.c,v 1.93.1.1 2017/04/19 17:20:42 roberto Exp $
+** $Id: ltablib.c,v 1.93 2016/02/25 19:41:54 roberto Exp $
 ** Library for Table Manipulation
 ** See Copyright Notice in lua.h
 */
@@ -184,6 +184,45 @@ static int tconcat (lua_State *L) {
   return 1;
 }
 
+/* 辅助函数：清空指定索引的 table */
+static void cleartable (lua_State *L, int t) {
+  lua_Integer len;
+  
+  /* 清空数组部分 */
+  len = aux_getn(L, t, TAB_RW);
+  for (lua_Integer i = len; i >= 1; i--) {
+    lua_pushnil(L);
+    lua_rawseti(L, t, i);  /* t[i] = nil */
+  }
+  
+  /* 清空哈希部分 */
+  lua_pushnil(L);  /* first key */
+  while (lua_next(L, t) != 0) {
+    /* stack: ... table key value */
+    lua_pushvalue(L, -2);  /* duplicate key */
+    /* stack: ... table key value key */
+    lua_pushnil(L);
+    /* stack: ... table key value key nil */
+    lua_rawset(L, t);  /* t[key] = nil (pops key and nil) */
+    /* stack: ... table key value */
+    lua_pop(L, 1);  /* remove value, keep key for next iteration */
+  }
+}
+
+static int tclear (lua_State *L) {
+    if (lua_isnoneornil(L, 1)) {
+        return 0;
+    }
+
+    int t = lua_absindex(L, 1);  /* 使用绝对索引 */
+    if (lua_type(L, t) != LUA_TTABLE) {
+        return 0;
+    }
+
+    checktab(L, t, TAB_RW);
+    cleartable(L, t);
+    return 0;
+}
 
 /*
 ** {======================================================
@@ -203,6 +242,25 @@ static int pack (lua_State *L) {
   return 1;  /* return table */
 }
 
+static int tpackinto(lua_State *L) {
+  int t = lua_absindex(L, 1);  /* 目标 table 的绝对索引 */
+  int nargs = lua_gettop(L) - 1;  /* 要 pack 的参数数量 */
+  
+  /* 检查第一个参数是否为 table */
+  checktab(L, t, TAB_RW);
+  
+  /* 先清空目标 table */
+  cleartable(L, t);
+  
+  /* 现在将参数 pack 到 table 中（从索引 1 开始） */
+  for (int i = 2; i <= nargs + 1; i++) {
+    lua_pushvalue(L, i);  /* 复制参数到栈顶 */
+    lua_rawseti(L, t, i - 1);  /* t[i-1] = value */
+  }
+  
+  lua_pushvalue(L, t);  /* 返回目标 table */
+  return 1;
+}
 
 static int unpack (lua_State *L) {
   lua_Unsigned n;
@@ -430,10 +488,12 @@ static const luaL_Reg tab_funcs[] = {
 #endif
   {"insert", tinsert},
   {"pack", pack},
+  {"packinto", tpackinto},
   {"unpack", unpack},
   {"remove", tremove},
   {"move", tmove},
   {"sort", sort},
+  {"clear", tclear},
   {NULL, NULL}
 };
 
