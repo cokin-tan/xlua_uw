@@ -5,7 +5,7 @@
 # Please note that the package source code is licensed under its own license.
 
 project ( lua C )
-cmake_minimum_required ( VERSION 3.5 )
+cmake_minimum_required ( VERSION 3.10 )
 include ( cmake/dist.cmake )
 
 ## CONFIGURATION
